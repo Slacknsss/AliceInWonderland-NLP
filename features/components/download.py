@@ -11,6 +11,11 @@ def download_book(book_id: int) -> str:
         The file path of the book.
     """
 
+    if not isinstance(book_id, int):
+        raise TypeError('book_id must be int')
+    elif book_id < 0:
+        raise ValueError
+
     link = f'https://www.gutenberg.org/cache/epub/{book_id}/pg{book_id}.txt'
     response = requests.get(link)
     

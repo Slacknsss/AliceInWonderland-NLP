@@ -16,7 +16,7 @@ def remove_gutenberg_tags(book_content: str) -> str:
     
     cleaned_text = ' '.join(book_content.split())
 
-    end_index = cleaned_text.find('*** END OF THE PROJECT GUTENBERG EBOOK')
+    end_index = cleaned_text.find('*** END OF')
     if end_index == -1:
         end_index = len(cleaned_text)
 

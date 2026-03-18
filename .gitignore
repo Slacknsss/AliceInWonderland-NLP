@@ -1,0 +1,5 @@
+*.python-version
+*.pdf
+__pycache__/
+venv/
+vev/

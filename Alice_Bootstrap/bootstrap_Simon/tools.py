@@ -1,0 +1,67 @@
+import pandas as pd
+import argparse
+import requests
+import re
+import nltk
+from nltk.tokenize import word_tokenize, sent_tokenize
+from nltk.corpus import stopwords
+import string
+from nltk.stem import WordNetLemmatizer, PorterStemmer
+nltk.download('stopwords')
+mots_vides = set(stopwords.words('english'))
+
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--info", type=int)
+parser.add_argument("--download")
+parser.add_argument("--lower", action = "store_true")
+parser.add_argument("--clean")
+parser.add_argument("--tokenize")
+parser.add_argument("--sent", action = "store_true")
+parser.add_argument("--stop", action = "store_true")
+parser.add_argument("--punct", action = "store_true")
+parser.add_argument("--postag", nargs = "+")
+parser.add_argument("--normalize", nargs = "+")
+parser.add_argument("--stem", action = "store_true")
+
+args = parser.parse_args()
+
+df = pd.read_csv("pg_catalog.csv", sep=",")
+
+if args.info:
+    ligne = df[df["Text#"] == args.info]
+    liste = ligne[["Title", "Authors", "Bookshelves"]].to_dict(orient="records")
+
+    result = {
+        "id":args.info,
+        "title":liste[0]["Title"],
+        "authors":liste[0]["Authors"],
+        "bookshelves":liste[0]["Bookshelves"]
+    }
+    print(result)
+elif args.download:
+    ID = args.download
+    url = f"https://www.gutenberg.org/files/{ID}/{ID}-0.txt"
+    response = requests.get(f"{url}")
+    with open(f"{ID}.txt", "w") as f:
+        f.write(response.text)
+elif args.clean:
+    cleaned_text = re.sub(r'\s+', ' ', f'{args.clean}')
+    if args.lower:
+        cleaned_text = cleaned_text.lower()
+    print(cleaned_text)
+elif args.tokenize:
+        if args.sent:
+           token = sent_tokenize(args.tokenize)
+        else:
+            token = word_tokenize(args.tokenize)
+        if args.stop:
+            token= [mot for mot in token if mot not in mots_vides]
+        if args.punct:
+            token = [mot for mot in token if mot not in string.punctuation]
+        print(token)
+elif args.postag: 
+    result = nltk.pos_tag(args.postag)
+    print(result)
+elif args.stem:

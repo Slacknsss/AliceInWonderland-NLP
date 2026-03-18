@@ -14,10 +14,10 @@ def arguments_init() -> argparse.Namespace:
     """
     Get the Namespace of registered arguments.
 
-    # Parameters
+    ## Parameters
         None
 
-    # Returns
+    ## Returns
         Argparse Namespace of registered args
     """
 
@@ -36,10 +36,10 @@ def arguments_events(registered_args: argparse.Namespace) -> None:
     """
     Add arguments event.
 
-    # Parameters
+    ## Parameters
         **registered_args**: argparse Namespace of registered arguments
     
-    # Returns
+    ## Returns
         None
     """
 

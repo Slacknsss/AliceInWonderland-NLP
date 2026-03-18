@@ -1,5 +1,5 @@
 import requests
-from remove_gutenberg_tags import remove_gutenberg_tags
+from .remove_gutenberg_tags import remove_gutenberg_tags
 
 def get_book_content(book_id: int) -> str:
     """

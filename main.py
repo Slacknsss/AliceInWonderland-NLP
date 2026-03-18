@@ -48,10 +48,12 @@ def arguments_events(registered_args: argparse.Namespace) -> None:
     
     for arg, data in args_action.items():
         if getattr(registered_args, arg):
-            data['action'](
+            result = data['action'](
                 *[getattr(registered_args, sub_arg) for sub_arg in data['sub_args']]
                 or None
             )
+            if result:
+                print(result)
 
     return None
 

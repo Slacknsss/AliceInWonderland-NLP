@@ -21,9 +21,11 @@ def tokenize(text: str, remove_punct: bool=False, remove_stop_words: bool=False)
     elif not text:
         raise ValueError
 
+    splited_words = text.split()
+
     tokenized = [
-        word for word in tokenized 
-        if word not in (remove_stop_words and stop_words or [])
+        word for word in splited_words 
+        if word not in (stop_words if remove_stop_words else [])
     ]
 
     if remove_punct:

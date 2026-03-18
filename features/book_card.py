@@ -32,7 +32,7 @@ def make_book_card(book_id: int) -> dict[str, dict|list|str]:
     }
 
     create_wordcloud(
-        book_card.get('info'),
+        book_card.get('info').get('title'),
         book_content,
     )
 

@@ -1,12 +1,12 @@
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 
-def create_wordcloud(book_info: int, text: str, width: int = 400, height: int = 400, margin: int = 0) -> str:
+def create_wordcloud(title: str, text: str, width: int = 400, height: int = 400, margin: int = 0) -> str:
     """
     Create wordcloud to represent most frequent words in a list of words.
 
     ## Parameters
-        **book_info**: Dictionnary of book informations
+        **title**: Book title
         **text**: Book content
         **width** : Width of the word cloud figure
         **height** : Height of the word cloud figure
@@ -16,7 +16,7 @@ def create_wordcloud(book_info: int, text: str, width: int = 400, height: int = 
         Wordcloud file path
     """
 
-    if not isinstance(book_info, dict) or \
+    if not isinstance(title, str) or \
     not isinstance(text, str) or \
     not isinstance(width, int) or \
     not isinstance(height, int) or \
@@ -25,12 +25,12 @@ def create_wordcloud(book_info: int, text: str, width: int = 400, height: int = 
     elif not text or height <= 0 or width <= 0 or margin < 0:
         raise ValueError
 
-    wordcloud_path = book_info.get('title')
+    wordcloud_path = f'./plot_assets/{title}'
 
     word_cloud = WordCloud(width=width, height=height, margin=margin).generate(text)
     plt.imshow(word_cloud, interpolation='bilinear')
     plt.axis('off')
     plt.margins(x=0, y=0)
-    plt.savefig(f'./plot_assets/{wordcloud_path}')
+    plt.savefig(wordcloud_path)
 
     return wordcloud_path

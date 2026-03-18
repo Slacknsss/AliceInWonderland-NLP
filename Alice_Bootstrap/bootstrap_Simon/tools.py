@@ -8,6 +8,17 @@ from nltk.corpus import stopwords
 import string
 from nltk.stem import WordNetLemmatizer, PorterStemmer
 nltk.download('stopwords')
+nltk.download('wordnet')
+
+def get_pos(tag):
+    if tag.startswith('V'):
+        return 'v'  
+    elif tag.startswith('J'):
+        return 'a'  
+    elif tag.startswith('R'):
+        return 'r'  
+    else:
+        return 'n'  
 mots_vides = set(stopwords.words('english'))
 
 
@@ -64,4 +75,13 @@ elif args.tokenize:
 elif args.postag: 
     result = nltk.pos_tag(args.postag)
     print(result)
-elif args.stem:
+elif args.normalize:
+    if args.stem:
+        ps = PorterStemmer()
+        token = [ps.stem(mot) for mot in args.normalize]
+        print(token)
+    else:
+        lemmatizer = WordNetLemmatizer()
+        tagged = nltk.pos_tag(args.normalize)
+        token = [lemmatizer.lemmatize(mot, pos=get_pos(tag)) for mot, tag in tagged]
+        print(token)

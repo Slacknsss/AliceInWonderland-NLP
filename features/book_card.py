@@ -3,6 +3,7 @@ from .lexical_diversity import lexical_diversity
 from .book_summarization import summarize_book
 from .components.wordcloud import create_wordcloud
 from .components.get_book_content import get_book_content
+from .books_similarity import get_books_similarity
 
 def make_book_card(book_id: int) -> dict[str, dict|list|str]:
     """
@@ -24,11 +25,11 @@ def make_book_card(book_id: int) -> dict[str, dict|list|str]:
 
     book_card = {
         'info': get_info(book_id),
-        'lexdiv': lexical_diversity(book_content),
+        'lexdiv': lexical_diversity(book_id, book_content),
         'topics': {},
         'entities': {},
-        'summary': summarize_book(book_content),
-        'similar': {},
+        'summary': summarize_book(book_id, book_content),
+        'similar': get_books_similarity(book_id, book_content),
     }
 
     create_wordcloud(

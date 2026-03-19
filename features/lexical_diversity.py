@@ -3,11 +3,12 @@ from collections import Counter
 from .components.get_book_content import get_book_content
 from .components.tokenize import tokenize
 
-def lexical_diversity(book_content: str) -> dict[str, int|float]:
+def lexical_diversity(book_id: int, book_content: str) -> dict[str, int|float]:
     """
     Get lexical informations about a book based on tokenization
 
     ## Parameters
+        **book_id**: Gutenberg project unique identifier
         **book_content**: Book content
 
     ## Returns
@@ -21,11 +22,18 @@ def lexical_diversity(book_content: str) -> dict[str, int|float]:
         "mwf":float # number of word token divided by number of unique word tokens
     """
 
-    if not isinstance(book_content, str):
+    if (book_content is not None and not isinstance(book_content, str)):
         raise TypeError('book_content must be str')
-    elif not book_content:
-        raise ValueError('')
+    elif not isinstance(book_id, int):
+        raise TypeError('book_id mut be an int')
+    elif book_content is not None and not book_content:
+        raise ValueError('book_content need to be fill')
+    elif book_id < 0:
+        raise ValueError('book_id must be positive')
     
+    if book_content is None:
+        book_content = get_book_content(book_id)
+        
     tokens = tokenize(text=book_content)
     tok = len(tokens)
 

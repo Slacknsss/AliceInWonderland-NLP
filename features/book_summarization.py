@@ -1,4 +1,4 @@
-from .components.get_book_content import get_book_content
+
 
 def summarize_book(book_content: str) -> str:
     """
@@ -15,5 +15,7 @@ def summarize_book(book_content: str) -> str:
         raise TypeError('book_content must be str')
     elif not book_content:
         raise ValueError('empty book')
+
+    
 
     return {}

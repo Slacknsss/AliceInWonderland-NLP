@@ -20,9 +20,10 @@ def download_book(book_id: int) -> str:
     response = requests.get(link)
     
     if response.status_code != 200:
-        raise ValueError('Invalid book id')
+        print(f'Invalid book id : {book_id}')
+        return
 
-    with open(f'./books/pgbook_{book_id}.txt', 'w+') as f:
-        f.write(response.text)
+    with open(f'./alice_assets/books/pgbook_{book_id}.txt', 'w+') as file:
+        file.write(response.text)
 
-    return f'./books/pgbook_{book_id}.txt'
+    return f'./alice_assets/books/pgbook_{book_id}.txt'

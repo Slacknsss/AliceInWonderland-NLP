@@ -1,7 +1,10 @@
 import argparse
+import requests
 from features.lexical_diversity import lexical_diversity
 from features.book_summarization import summarize_book
 from features.book_card import make_book_card
+from features.download_all_books import download_all_books
+from features.components.fetch_cover import fetch_cover
 
 args_action = {
     'lexdiv': {
@@ -17,14 +20,14 @@ args_action = {
         'sub_args': ['book_id']
     },
     'cover': {
-        'action': lambda book_id: f'Cover for book {book_id}',
+        'action': lambda book_id: fetch_cover(book_id, True),
         'sub_args': ['book_id']
     },
     'download': {
         'action': lambda author, category: (
-            f'Download by author={author}'
+            download_all_books(author, None)
             if author is not None
-            else f'Download by category={category}'
+            else download_all_books(None, category)
         ),
         'sub_args': ['author', 'category'],
         'optional_args': [
@@ -97,7 +100,7 @@ def arguments_init() -> argparse.Namespace:
             parser.add_argument(opt_arg, type=arg_type)
 
         for sub_arg in data.get('sub_args', []):
-            if sub_arg not in registered_sub_args:
+            if sub_arg not in registered_sub_args and ('--'+sub_arg) not in [arg[0] for arg in data.get('optional_args', [])]:
                 parser.add_argument(sub_arg, type=int, nargs='?')
                 registered_sub_args.append(sub_arg)
 
@@ -126,7 +129,7 @@ def arguments_events(registered_args: argparse.Namespace) -> None:
                 *[getattr(registered_args, sub_arg) for sub_arg in data['sub_args']]
                 or None
             )
-            if result:
+            if result and not isinstance(result, requests.Response):
                 print(result)
 
     return None

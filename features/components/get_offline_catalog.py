@@ -1,5 +1,7 @@
-import requests
 import os.path
+
+import requests
+
 
 def get_offline_catalogue() -> None:
     """

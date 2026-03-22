@@ -1,12 +1,13 @@
 import requests
 
+
 def download_book(book_id: int) -> str:
     """
     Download the book.
 
     ## Parameters
         **book_id**: Gutenberg project unique identifier
-    
+
     ## Returns
         The file path of the book.
     """
@@ -18,7 +19,7 @@ def download_book(book_id: int) -> str:
 
     link = f'https://www.gutenberg.org/cache/epub/{book_id}/pg{book_id}.txt'
     response = requests.get(link)
-    
+
     if response.status_code != 200:
         print(f'Invalid book id : {book_id}')
         return

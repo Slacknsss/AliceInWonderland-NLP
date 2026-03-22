@@ -1,17 +1,34 @@
-def clean_book_content(book_content: str) -> tuple[str, str]:
+def clean_book_content(book_content: str) -> str:
     """
-    Clean and normalize the book content
+    Clean the book content
 
     ## Parameters
         **book_content**: The book text
 
     ## Returns
-        Tuple (cleaned book text, normalized & cleaned book text)
+        Cleaned book content
     """
 
-    
+    if not isinstance(book_content, str):
+        raise TypeError('book_content must be a str')
+    if not book_content.strip():
+        raise ValueError('book_content must not be empty')
 
-    cleaned_book = ''
-    normalized_cleaned_book = ''
+    content = book_content.replace('\r\n', '\n').replace('\r', '\n').replace('__', '')
+    lines = [line.strip() for line in content.split('\n')]
 
-    return (cleaned_book, normalized_cleaned_book)
+    cleaned_lines = []
+    previous_empty = False
+
+    for line in lines:
+        is_empty = line == ''
+
+        if is_empty:
+            if not previous_empty:
+                cleaned_lines.append('')
+            previous_empty = True
+        else:
+            cleaned_lines.append(line)
+            previous_empty = False
+
+    return '\n'.join(cleaned_lines).strip()

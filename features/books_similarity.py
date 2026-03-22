@@ -1,5 +1,3 @@
-from .components.get_book_content import get_book_content
-
 def get_books_similarity(book_id: int, book_content: str) -> list[str]:
     """
     Get similar books
@@ -13,6 +11,5 @@ def get_books_similarity(book_id: int, book_content: str) -> list[str]:
     """
 
     similar_books = []
-
 
     return similar_books

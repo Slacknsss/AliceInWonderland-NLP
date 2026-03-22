@@ -1,5 +1,7 @@
 import pandas as pd
+
 from .get_offline_catalog import get_offline_catalogue
+
 
 def get_info(book_id: int) -> dict[str, str]:
     """
@@ -30,7 +32,7 @@ def get_info(book_id: int) -> dict[str, str]:
         'id': book_id,
         'title': df_book.get('Title'),
         'authors': df_book.get('Authors'),
-        'bookshelves': df_book.get('Bookshelves')
+        'bookshelves': df_book.get('Bookshelves'),
     }
 
     return result

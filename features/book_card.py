@@ -4,6 +4,7 @@ from .components.get_book_content import get_book_content
 from .components.get_info import get_info
 from .components.wordcloud import create_wordcloud
 from .lexical_diversity import lexical_diversity
+from .named_entities_recognition import named_entities
 
 
 def make_book_card(book_id: int) -> dict[str, dict | list | str]:
@@ -28,7 +29,7 @@ def make_book_card(book_id: int) -> dict[str, dict | list | str]:
         'info': get_info(book_id),
         'lexdiv': lexical_diversity(book_id, book_content),
         'topics': {},
-        'entities': {},
+        'entities': named_entities(book_content),
         'summary': summarize_book(book_id, book_content),
         'similar': get_books_similarity(book_id, book_content),
     }

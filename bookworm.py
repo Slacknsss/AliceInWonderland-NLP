@@ -1,11 +1,10 @@
 from features.book_card import make_book_card
 from features.book_summarization import summarize_book
+from features.components.arguments.arguments_events import arguments_events
+from features.components.arguments.arguments_initialisation import arguments_initialisation
 from features.components.fetch_cover import fetch_cover
 from features.download_all_books import download_all_books
 from features.lexical_diversity import lexical_diversity
-
-from features.components.arguments.arguments_events import arguments_events
-from features.components.arguments.arguments_initialisation import arguments_initialisation
 
 args_action = {
     'lexdiv': {

@@ -4,20 +4,29 @@
 # -Filtrer les entitées par label( PERSON,GPE,LOC)
 # -Retourner le dictionnaire exemple : {"characteres" : [JEAN], "locations":[PARIS]}
 import spacy
+from spacy.cli import download
 
-nlp = spacy.load(
-    'en_core_web_md'
-)  # chargement du model (il sait reconnaitre les mots, les types ,les entitiés )
+try:
+    nlp = spacy.load("en_core_web_md")  # chargement du model (il sait reconnaitre les mots, les types ,les entitiés )
+except OSError:
+    download("en_core_web_md")
+    nlp = spacy.load("en_core_web_md")
 
+def named_entities(book_content: str) -> dict[str, list]:
+    """
+    Identify characters and locations mentioned in the book
 
-def named_entities(book_id):
-    with open(f'{book_id}.txt') as f:
-        text = f.read()
-    
+    ## Parameters
+        **book_content**: Book content
+
+    ## Returns
+        Dictionnary with list of characters and locations
+    """
+
     characters = set()
     locations = set()
     chunk_size = 10000
-    chunks = [text[i:i+chunk_size] for i in range(0, len(text), chunk_size)]
+    chunks = [book_content[i:i+chunk_size] for i in range(0, len(book_content), chunk_size)]
 
     for chunk in chunks:
         doc = nlp(chunk)

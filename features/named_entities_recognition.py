@@ -13,12 +13,20 @@ nlp = spacy.load(
 def named_entities(book_id):
     with open(f'{book_id}.txt') as f:
         text = f.read()
-    doc = nlp(text)
-    characters = []
-    locations = []
-    for entities in doc.ents:
-        if entities.label_ == 'PERSON' and '\n' not in entities.text:
-            characters.append(entities.text)
-        elif entities.label_ in ['GPE', 'LOC']:
-            locations.append(entities.text)
-    return {'characters': list(set(characters)), 'locations': list(set(locations))}
+    
+    characters = set()
+    locations = set()
+    chunk_size = 10000
+    chunks = [text[i:i+chunk_size] for i in range(0, len(text), chunk_size)]
+
+    for chunk in chunks:
+        doc = nlp(chunk)
+        for ent in doc.ents:
+            if ent.label_ == "PERSON" and "\n" not in ent.text and not ent.text.startswith("CHAPTER"):
+                characters.add(ent.text)
+            elif ent.label_ in ["GPE", "LOC"] and "\n" not in ent.text :
+                locations.add(ent.text)
+    return {
+        "characters": list(characters),
+        "locations": list(locations)
+    }

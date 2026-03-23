@@ -1,5 +1,7 @@
 import requests
+
 from .remove_gutenberg_tags import remove_gutenberg_tags
+
 
 def get_book_content(book_id: int) -> str:
     """
@@ -7,7 +9,7 @@ def get_book_content(book_id: int) -> str:
 
     ## Parameters
         **book_id**: Gutenberg project unique identifier
-    
+
     ## Returns
         The book content.
     """
@@ -19,7 +21,7 @@ def get_book_content(book_id: int) -> str:
 
     link = f'https://www.gutenberg.org/cache/epub/{book_id}/pg{book_id}.txt'
     response = requests.get(link)
-    
+
     if response.status_code != 200:
         raise ValueError('Invalid book id')
 

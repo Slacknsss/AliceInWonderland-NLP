@@ -4,7 +4,9 @@ from collections.abc import Callable
 from .arguments_validation import argument_validation
 
 
-def arguments_initialisation(args_action: dict[str, dict[str, Callable | list]]) -> argparse.Namespace:
+def arguments_initialisation(
+    args_action: dict[str, dict[str, Callable | list]],
+) -> argparse.Namespace:
     """
     Get the Namespace of registered arguments.
 

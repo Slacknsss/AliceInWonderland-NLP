@@ -3,11 +3,7 @@ from wordcloud import WordCloud
 
 
 def create_wordcloud(
-    book_id: int,
-    text: str,
-    width: int = 400,
-    height: int = 400,
-    margin: int = 0
+    book_id: int, text: str, width: int = 400, height: int = 400, margin: int = 0
 ) -> str:
     """
     Create wordcloud to represent most frequent words in a list of words.

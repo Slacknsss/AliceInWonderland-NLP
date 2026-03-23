@@ -10,6 +10,7 @@ DEFAULT_STOPWORDS = {
     'here', 'too', 'very', 'just', 'about', 'over', 'under', 'again', 'once',
 }
 
+
 def score_sentences(
     sentences: list[str],
     min_words: int = 15,

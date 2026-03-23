@@ -2,7 +2,11 @@ import argparse
 from collections.abc import Callable
 
 
-def argument_validation(parser: argparse.ArgumentParser, args: argparse.Namespace, args_action: dict[str, dict[str, Callable | list]]) -> None:
+def argument_validation(
+    parser: argparse.ArgumentParser,
+    args: argparse.Namespace,
+    args_action: dict[str, dict[str, Callable | list]],
+) -> None:
     """
     Validate combinations of arguments.
 

@@ -68,7 +68,7 @@ def named_entities(book_id: int, book_content: str | None = None) -> dict[str, l
 #             if subtree.label() == "PERSON":
 #                 characters.add(texte)
 #             elif subtree.label() in ["GPE", "LOC"]:
-#                 locations.add(texte) 
+#                 locations.add(texte)
 #     return {
 #         "characters": list(characters),
 #         "locations": list(locations)

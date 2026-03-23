@@ -1,6 +1,6 @@
-import re
 import argparse
 import logging
+import re
 
 import nltk
 from nltk.corpus import stopwords

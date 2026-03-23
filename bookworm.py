@@ -5,14 +5,34 @@ from features.components.arguments.arguments_initialisation import arguments_ini
 from features.components.fetch_cover import fetch_cover
 from features.download_all_books import download_all_books
 from features.lexical_diversity import lexical_diversity
+from features.topic_modeling import topic_modeling
+from features.components.get_info import get_info
+from features.named_entities_recognition import named_entities
+from features.books_similarity import get_books_similarity
 
 args_action = {
     'lexdiv': {
         'action': lambda book_id: lexical_diversity(book_id),
         'sub_args': ['book_id']
     },
+    'topics': {
+        'action': lambda book_id: topic_modeling(book_id),
+        'sub_args': ['book_id'] 
+    },
+    'info': {
+        'action': lambda book_id: get_info(book_id),
+        'sub_args': ['book_id']
+    },
+    'entities': {
+        'action': lambda book_id: named_entities(book_id),
+        'sub_args': ['book_id']
+    },
     'summarize': {
         'action': lambda book_id: summarize_book(book_id),
+        'sub_args': ['book_id']
+    },
+    'similar': {
+        'action': lambda book_id: get_books_similarity(book_id),
         'sub_args': ['book_id']
     },
     'card': {

@@ -1,6 +1,6 @@
-import re
 import argparse
 import logging
+import re
 
 import nltk
 from nltk.corpus import stopwords
@@ -14,22 +14,22 @@ N_Topics = 8
 N_Words = 9
 
 CHAPTER_PATTERN = re.compile(
-    r"(?<!\w)(CHAPTER|CHAP)\s+([IVXLCDM]+|[0-9]+)\.?",
+    r'(?<!\w)(CHAPTER|CHAP)\s+([IVXLCDM]+|[0-9]+)\.?',
     flags=re.IGNORECASE,
 )
 
 LITERARY_STOPWORDS = {
-    "said", "could", "would", "should", "upon", "one", "yet", "may",
-    "much", "even", "also", "back", "still", "came", "went", "come",
-    "like", "know", "little", "great", "man", "men", "time", "hand",
-    "good", "mr", "mrs", "miss", "old", "made", "way", "day", "eyes",
-    "never", "every", "well", "thought", "looked", "long", "face",
-    "us", "without", "always", "away", "thing", "things","oh",
+    'the', 'a', 'an', 'and', 'or', 'but', 'of', 'to', 'in', 'on', 'at', 'for', 'with', 'by', 'is', 'are', 'was',
+    'were', 'be', 'been', 'it', 'this', 'that', 'these', 'those', 'as', 'from', 'not', 'he', 'she', 'they', 'we',
+    'you', 'i', 'his', 'her', 'their', 'our', 'my', 'your', 'him', 'them', 'me', 'us', 'do', 'did', 'does', 'have',
+    'has', 'had', 'so', 'if', 'then', 'than', 'into', 'out', 'up', 'down', 'all', 'any', 'what', 'which', 'who', 'whom',
+    'when', 'where', 'why', 'how', 'can', 'could', 'would', 'should', 'shall', 'will', 'may', 'might', 'must', 'there',
+    'here', 'too', 'very', 'just', 'about', 'over', 'under', 'again', 'once',
 }
 
 logging.basicConfig(
     level=logging.INFO,
-    format="%(levelname)s | %(message)s",
+    format='%(levelname)s | %(message)s',
 )
 logger = logging.getLogger(__name__)
 
@@ -46,8 +46,8 @@ def _build_stopwords():
     ## Returns
         A list containing all stopwords used for text preprocessing
     """
-    nltk.download("stopwords", quiet=True)
-    base = set(stopwords.words("english"))
+    nltk.download('stopwords', quiet=True)
+    base = set(stopwords.words('english'))
     return list(base | LITERARY_STOPWORDS)
 
 
@@ -68,7 +68,7 @@ def split_into_chunks(text, words_per_chunk=Word_Per_Chunk):
     tokens = text.split()
     chunks = []
     for i in range(0, len(tokens), words_per_chunk):
-        chunk = " ".join(tokens[i:i + words_per_chunk])
+        chunk = ' '.join(tokens[i : i + words_per_chunk])
         chunks.append(chunk)
     return chunks
 
@@ -87,8 +87,8 @@ def split_book(text):
     ## Returns
         A list of chapters or text chunks
     """
-    text = text.replace("\r\n", "\n")
-    text = re.sub(r"\n{3,}", "\n\n", text)
+    text = text.replace('\r\n', '\n')
+    text = re.sub(r'\n{3,}', '\n\n', text)
     text = text.strip()
 
     all_boundaries = [m.start() for m in CHAPTER_PATTERN.finditer(text)]
@@ -100,7 +100,7 @@ def split_book(text):
 
     if len(boundaries) <= 1:
         logger.warning(
-            "No chapter markers found — falling back to %d-word chunks.",
+            'No chapter markers found — falling back to %d-word chunks.',
             Word_Per_Chunk,
         )
         return split_into_chunks(text)
@@ -112,8 +112,9 @@ def split_book(text):
         if chapter_text:
             chapters.append(chapter_text)
 
-    logger.info("Book split into %d segment(s).", len(chapters))
+    logger.info('Book split into %d segment(s).', len(chapters))
     return chapters
+
 
 def get_top_words(model, feature_names, n_words):
     """
@@ -157,7 +158,7 @@ def extract_topics_from_book(book_id, n_topics=N_Topics, n_words=N_Words):
         A dictionary mapping section numbers to their main topic words
     """
     text = get_book_content(book_id)
-    logger.info("Book fetched for id: %s", book_id)
+    logger.info('Book fetched for id: %s', book_id)
 
     chapters = split_book(text)
 
@@ -173,7 +174,7 @@ def extract_topics_from_book(book_id, n_topics=N_Topics, n_words=N_Words):
     actual_n_topics = min(n_topics, len(chapters))
     if actual_n_topics < n_topics:
         logger.warning(
-            "Requested %d topics but only %d sections available — using %d topic(s) instead.",
+            'Requested %d topics but only %d sections available — using %d topic(s) instead.',
             n_topics,
             len(chapters),
             actual_n_topics,
@@ -182,7 +183,7 @@ def extract_topics_from_book(book_id, n_topics=N_Topics, n_words=N_Words):
     lda = LatentDirichletAllocation(
         n_components=actual_n_topics,
         random_state=42,
-        learning_method="batch",
+        learning_method='batch',
         doc_topic_prior=0.1,
         topic_word_prior=0.01,
     )
@@ -213,13 +214,13 @@ def _build_parser():
         An argparse.ArgumentParser instance
     """
     parser = argparse.ArgumentParser(
-        description="Extract main topics from each section of a Project Gutenberg book.",
+        description='Extract main topics from each section of a Project Gutenberg book.',
     )
     parser.add_argument(
-        "--topics",
+        '--topics',
         type=int,
         required=True,
-        help="Numeric book ID from Project Gutenberg.",
+        help='Numeric book ID from Project Gutenberg.',
     )
 
 
@@ -242,8 +243,9 @@ def main():
         book_id=args.topics,
     )
     for section_num, words in topics.items():
-        print(f"\n=== Section {section_num} ===")
-        print(", ".join(words))
+        print(f'\n=== Section {section_num} ===')
+        print(', '.join(words))
 
-if __name__ == "__main__":
+
+if __name__ == '__main__':
     main()

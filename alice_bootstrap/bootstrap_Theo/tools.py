@@ -23,6 +23,7 @@ os.system('clear')
 
 stop_words = set(stopwords.words('english'))
 
+
 def init_args() -> None:
     """
     Initialisation of arguments and flags.
@@ -60,8 +61,10 @@ def init_args() -> None:
 
     return None
 
+
 if __name__ == '__main__':
     init_args()
+
 
 def download_book(book_id: int) -> str:
     """
@@ -85,6 +88,7 @@ def download_book(book_id: int) -> str:
 
     return f'pgbook_{book_id}.txt'
 
+
 def get_wordnet_pos(tag):
     if tag.startswith('J'):
         return 'a'
@@ -94,6 +98,7 @@ def get_wordnet_pos(tag):
         return 'r'
     else:
         return 'n'
+
 
 if args.info:
     if not args.value:

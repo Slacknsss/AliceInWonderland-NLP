@@ -4,7 +4,9 @@ from collections.abc import Callable
 import requests
 
 
-def arguments_events(registered_args: argparse.Namespace, args_action: dict[str, dict[str, Callable | list]]) -> None:
+def arguments_events(
+    registered_args: argparse.Namespace, args_action: dict[str, dict[str, Callable | list]]
+) -> None:
     """
     Add arguments event.
 

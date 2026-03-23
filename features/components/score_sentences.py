@@ -10,6 +10,7 @@ DEFAULT_STOPWORDS = {
     'here', 'too', 'very', 'just', 'about', 'over', 'under', 'again', 'once',
 }
 
+
 def score_sentences(
     sentences: list[str],
     min_words: int = 15,
@@ -39,26 +40,25 @@ def score_sentences(
 
     if not isinstance(sentences, list):
         raise TypeError('sentences must be a list')
-    if not sentences:
+    elif not sentences:
         raise ValueError('sentences must not be empty')
-    if not all(isinstance(sentence, str) for sentence in sentences):
+    elif not all(isinstance(sentence, str) for sentence in sentences):
         raise TypeError('each sentence must be a str')
-
-    if not isinstance(min_words, int) or min_words <= 0:
+    elif not isinstance(min_words, int) or min_words <= 0:
         raise ValueError('min_words must be a positive int')
-    if not isinstance(max_words, int) or max_words <= 0:
+    elif not isinstance(max_words, int) or max_words <= 0:
         raise ValueError('max_words must be a positive int')
-    if min_words > max_words:
+    elif min_words > max_words:
         raise ValueError('min_words must be lower than or equal to max_words')
-    if not isinstance(min_useful_words, int) or min_useful_words <= 0:
+    elif not isinstance(min_useful_words, int) or min_useful_words <= 0:
         raise ValueError('min_useful_words must be a positive int')
-    if not isinstance(min_word_length, int) or min_word_length <= 0:
+    elif not isinstance(min_word_length, int) or min_word_length <= 0:
         raise ValueError('min_word_length must be a positive int')
-    if not isinstance(exclude_dialogue, bool):
+    elif not isinstance(exclude_dialogue, bool):
         raise TypeError('exclude_dialogue must be a bool')
-    if not isinstance(normalize_by_length, bool):
+    elif not isinstance(normalize_by_length, bool):
         raise TypeError('normalize_by_length must be a bool')
-    if not isinstance(skip_first_sentences, int):
+    elif not isinstance(skip_first_sentences, int):
         raise TypeError('skip_first_sentences must be an int')
 
     stopwords = DEFAULT_STOPWORDS

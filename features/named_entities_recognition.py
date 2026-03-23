@@ -10,10 +10,13 @@ from spacy.cli import download
 from .components.get_book_content import get_book_content
 
 try:
-    nlp = spacy.load("en_core_web_md")  # chargement du model (il sait reconnaitre les mots, les types ,les entitiés )
+    nlp = spacy.load(
+        'en_core_web_md'
+    )  # chargement du model (il sait reconnaitre les mots, les types ,les entitiés )
 except OSError:
-    download("en_core_web_md")
-    nlp = spacy.load("en_core_web_md")
+    download('en_core_web_md')
+    nlp = spacy.load('en_core_web_md')
+
 
 def named_entities(book_id: int, book_content: str | None = None) -> dict[str, list]:
     """
@@ -31,19 +34,20 @@ def named_entities(book_id: int, book_content: str | None = None) -> dict[str, l
     characters = set()
     locations = set()
     chunk_size = 10000
-    chunks = [book_content[i:i+chunk_size] for i in range(0, len(book_content), chunk_size)]
+    chunks = [book_content[i : i + chunk_size] for i in range(0, len(book_content), chunk_size)]
 
     for chunk in chunks:
         doc = nlp(chunk)
         for ent in doc.ents:
-            if ent.label_ == "PERSON" and "\n" not in ent.text and not ent.text.startswith("CHAPTER"):
+            if (
+                ent.label_ == 'PERSON'
+                and '\n' not in ent.text
+                and not ent.text.startswith('CHAPTER')
+            ):
                 characters.add(ent.text)
-            elif ent.label_ in ["GPE", "LOC"] and "\n" not in ent.text :
+            elif ent.label_ in ['GPE', 'LOC'] and '\n' not in ent.text:
                 locations.add(ent.text)
-    return {
-        "characters": list(characters),
-        "locations": list(locations)
-  }
+    return {'characters': list(characters), 'locations': list(locations)}
 
 
 # technique sans model lourd #
@@ -68,7 +72,7 @@ def named_entities(book_id: int, book_content: str | None = None) -> dict[str, l
 #             if subtree.label() == "PERSON":
 #                 characters.add(texte)
 #             elif subtree.label() in ["GPE", "LOC"]:
-#                 locations.add(texte) 
+#                 locations.add(texte)
 #     return {
 #         "characters": list(characters),
 #         "locations": list(locations)

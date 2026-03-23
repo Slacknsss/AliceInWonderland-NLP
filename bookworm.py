@@ -11,52 +11,22 @@ from features.named_entities_recognition import named_entities
 from features.topic_modeling import topic_modeling
 
 args_action = {
-    'lexdiv': {
-        'action': lambda book_id: lexical_diversity(book_id),
-        'sub_args': ['book_id']
-    },
-    'topics': {
-        'action': lambda book_id: topic_modeling(book_id),
-        'sub_args': ['book_id']
-    },
-    'info': {
-        'action': lambda book_id: get_info(book_id),
-        'sub_args': ['book_id']
-    },
-    'entities': {
-        'action': lambda book_id: named_entities(book_id),
-        'sub_args': ['book_id']
-    },
-    'summarize': {
-        'action': lambda book_id: summarize_book(book_id),
-        'sub_args': ['book_id']
-    },
-    'similar': {
-        'action': lambda book_id: get_books_similarity(book_id),
-        'sub_args': ['book_id']
-    },
-    'card': {
-        'action': lambda book_id: make_book_card(book_id),
-        'sub_args': ['book_id']
-    },
-    'cover': {
-        'action': lambda book_id: fetch_cover(book_id, True),
-        'sub_args': ['book_id']
-    },
+    'lexdiv': {'action': lambda book_id: lexical_diversity(book_id), 'sub_args': ['book_id']},
+    'topics': {'action': lambda book_id: topic_modeling(book_id), 'sub_args': ['book_id']},
+    'info': {'action': lambda book_id: get_info(book_id), 'sub_args': ['book_id']},
+    'entities': {'action': lambda book_id: named_entities(book_id), 'sub_args': ['book_id']},
+    'summarize': {'action': lambda book_id: summarize_book(book_id), 'sub_args': ['book_id']},
+    'similar': {'action': lambda book_id: get_books_similarity(book_id), 'sub_args': ['book_id']},
+    'card': {'action': lambda book_id: make_book_card(book_id), 'sub_args': ['book_id']},
+    'cover': {'action': lambda book_id: fetch_cover(book_id, True), 'sub_args': ['book_id']},
     'download': {
         'action': lambda author, category: (
             download_all_books(author, None)
             if author is not None
             else download_all_books(None, category)
         ),
-        'sub_args': [
-            'author',
-            'category'
-        ],
-        'optional_args': [
-            ('--author', str),
-            ('--category', str)
-        ],
+        'sub_args': ['author', 'category'],
+        'optional_args': [('--author', str), ('--category', str)],
     },
 }
 

@@ -12,6 +12,7 @@ from nltk.tokenize import sent_tokenize, word_tokenize
 nltk.download('stopwords')
 nltk.download('wordnet')
 
+
 def get_pos(tag):
     if tag.startswith('V'):
         return 'v'

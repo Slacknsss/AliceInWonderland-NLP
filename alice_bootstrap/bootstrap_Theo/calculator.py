@@ -10,6 +10,7 @@ operations = {
 
 operations_sign = {'add': '+', 'sub': '-', 'mul': '*', 'div': '/', 'divdiv': '/'}
 
+
 def calculate(
     x: int | float,
     y: int | float,
@@ -52,6 +53,7 @@ def calculate(
 
     return f'{x} {operations_sign[operator]} {y} = {float(operations[operator](x, y))}'
 
+
 parser = argparse.ArgumentParser()
 group = parser.add_mutually_exclusive_group(required=True)
 
@@ -81,6 +83,7 @@ def get_current_arg(args: argparse) -> list[list[str, bool]]:
         The current arguments sorted by usage
     """
     return sorted(args, key=lambda x: x[1], reverse=True)[0][0]
+
 
 current_arg = get_current_arg(args._get_kwargs())
 if current_arg in operations:

@@ -1,9 +1,11 @@
-import re
 import logging
+import re
+
 import nltk
 from nltk.corpus import stopwords
-from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.decomposition import LatentDirichletAllocation
+from sklearn.feature_extraction.text import CountVectorizer
+
 from .components.get_book_content import get_book_content
 
 Word_Per_Chunk = 1000

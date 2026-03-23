@@ -1,6 +1,7 @@
 *.python-version
 *.pdf
 __pycache__/
+.ruff_cache/
 venv/
 vev/
 *.DS_Store

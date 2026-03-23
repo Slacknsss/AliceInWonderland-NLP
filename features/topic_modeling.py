@@ -4,15 +4,15 @@ import logging
 import nltk
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.decomposition import LatentDirichletAllocation
-from components.download import download_book
+from components.get_book_content import get_book_content
 from components.remove_gutenberg_tags import remove_gutenberg_tags
 
 Word_Per_Chunk = 2000
 N_Topics = 10
-N_Words = 10
+N_Words = 5
 
 CHAPTER_PATTERN = re.compile(
-    r"\n\s*(CHAPTER|Chapter|CHAP|Chap|BOOK|Book)\s+([IVXLC0-9]+|\w+)[^\n]*\n",
+    r"\n\s*(CHAPTER|Chapter|CHAP|Chap)\s+([IVXLC0-9]+|\w+)[^\n]*\n",
     flags=re.IGNORECASE,
 )
 
@@ -23,7 +23,6 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-
 def split_into_chunks(text, words_per_chunk=Word_Per_Chunk):
     tokens = text.split()
     chunks = []
@@ -33,7 +32,6 @@ def split_into_chunks(text, words_per_chunk=Word_Per_Chunk):
         chunks.append(chunk)
 
     return chunks
-
 
 def split_book(text):
     text = text.replace("\r\n", "\n")  # amélioration robustesse
@@ -66,7 +64,6 @@ def split_book(text):
     logger.info("Book split into %d segment(s).", len(chapters))
     return chapters
 
-
 def get_top_words(model, feature_names, n_words):
     topics = []
 
@@ -81,10 +78,9 @@ def get_top_words(model, feature_names, n_words):
 
     return topics
 
-
 def extract_topics_from_book(book_id, n_topics=N_Topics, n_words=N_Words):
 
-    path = download_book(book_id)
+    path = get_book_content(book_id)
     logger.info("Book downloaded to: %s", path)
 
     with open(path, "r", encoding="utf-8") as fh:
@@ -134,7 +130,6 @@ def extract_topics_from_book(book_id, n_topics=N_Topics, n_words=N_Words):
 
     return results
 
-
 def _build_parser():
 
     parser = argparse.ArgumentParser(
@@ -165,7 +160,6 @@ def main():
     for section_num, words in topics.items():
         print(f"\n=== Section {section_num} ===")
         print(", ".join(words))
-
 
 if __name__ == "__main__":
     main()

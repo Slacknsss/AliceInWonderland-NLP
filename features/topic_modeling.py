@@ -1,11 +1,10 @@
 import re
-import argparse
 import logging
 import nltk
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.decomposition import LatentDirichletAllocation
-from components.get_book_content import get_book_content
+from .components.get_book_content import get_book_content
 
 Word_Per_Chunk = 1000
 N_Topics = 8
@@ -87,8 +86,8 @@ def get_top_words(model, feature_names, n_words):
     return topics
 
 
-def extract_topics_from_book(book_id, n_topics=N_Topics, n_words=N_Words):
-    text = get_book_content(book_id)
+def extract_topics_from_book(book_id, book_content, n_topics=N_Topics, n_words=N_Words):
+    text = book_content
     logger.info("Book fetched for id: %s", book_id)
 
     chapters = split_book(text)
@@ -130,31 +129,17 @@ def extract_topics_from_book(book_id, n_topics=N_Topics, n_words=N_Words):
         results[i + 1] = lda_topics[topic_index]
     return results
 
-
-def _build_parser():
-    parser = argparse.ArgumentParser(
-        description="Extract main topics from each section of a Project Gutenberg book.",
-    )
-    parser.add_argument(
-        "--topics",
-        type=int,
-        required=True,
-        help="Numeric book ID from Project Gutenberg.",
-    )
-    return parser
-
-
-def main():
-    parser = _build_parser()
-    args = parser.parse_args()
+def topic_modeling(book_id: int, book_content: str | None = None) -> str:
     topics = extract_topics_from_book(
-        book_id=args.topics,
+        book_id=book_id,
+        book_content=book_content or get_book_content(book_id),
     )
+
+    result = ''
+
     for section_num, words in topics.items():
-        print(f"\n=== Section {section_num} ===")
-        print(", ".join(words))
+        result += f'\n=== Section {section_num} ===\n'
+        result += ', '.join(words)
+        result += '\n'
 
-if __name__ == "__main__":
-    main()
-
-    
+    return result

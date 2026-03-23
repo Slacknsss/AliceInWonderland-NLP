@@ -1,10 +1,11 @@
 import re
+import argparse
 import logging
 import nltk
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.decomposition import LatentDirichletAllocation
-from .components.get_book_content import get_book_content
+from components.get_book_content import get_book_content
 
 Word_Per_Chunk = 1000
 N_Topics = 8
@@ -32,12 +33,36 @@ logger = logging.getLogger(__name__)
 
 
 def _build_stopwords():
+    """
+    Build the list of stopwords used by the vectorizer.
+
+    It combines the default NLTK English stopwords with stopwords defined in the project.
+
+    ## Parameters
+        None
+
+    ## Returns
+        A list containing all stopwords used for text preprocessing
+    """
     nltk.download("stopwords", quiet=True)
     base = set(stopwords.words("english"))
     return list(base | LITERARY_STOPWORDS)
 
 
 def split_into_chunks(text, words_per_chunk=Word_Per_Chunk):
+    """
+    Split a text into fixed-size chunks based on a number of words.
+
+    This function is used in case no chapter markers
+    are detected in the book.
+
+    ## Parameters
+        **text**: the full book text
+        **words_per_chunk**: maximum number of words per chunk
+
+    ## Returns
+        A list of text chunks
+    """
     tokens = text.split()
     chunks = []
     for i in range(0, len(tokens), words_per_chunk):
@@ -47,6 +72,19 @@ def split_into_chunks(text, words_per_chunk=Word_Per_Chunk):
 
 
 def split_book(text):
+    """
+    Split a book into chapters based on chapter markers.
+
+    The function detects chapter titles such as "CHAPTER I" or
+    "CHAP 1" using a regular expression. If no chapters are found,
+    the book is split into fixed-size chunks.
+
+    ## Parameters
+        **text**: the full book text
+
+    ## Returns
+        A list of chapters or text chunks
+    """
     text = text.replace("\r\n", "\n")
     text = re.sub(r"\n{3,}", "\n\n", text)
     text = text.strip()
@@ -76,6 +114,20 @@ def split_book(text):
     return chapters
 
 def get_top_words(model, feature_names, n_words):
+    """
+    Extract the most important words for each topic in the LDA model.
+
+    For each topic, the function selects the words with the highest
+    weights in the topic-word distribution.
+
+    ## Parameters
+        **model**: trained LDA model
+        **feature_names**: vocabulary used by the vectorizer
+        **n_words**: number of top words returned per topic
+
+    ## Returns
+        A list of topics containing their most important words
+    """
     topics = []
     for topic in model.components_:
         top_indices = topic.argsort()[-n_words:][::-1]
@@ -86,8 +138,23 @@ def get_top_words(model, feature_names, n_words):
     return topics
 
 
-def extract_topics_from_book(book_id, book_content, n_topics=N_Topics, n_words=N_Words):
-    text = book_content
+def extract_topics_from_book(book_id, n_topics=N_Topics, n_words=N_Words):
+    """
+    Extract the main topic for each section of a book.
+
+    The book is first downloaded from Project Gutenberg, then split
+    into chapters or chunks. An LDA model is trained on these sections
+    to determine the dominant topic for each one.
+
+    ## Parameters
+        **book_id**: Project Gutenberg book identifier
+        **n_topics**: number of topics used by the LDA model
+        **n_words**: number of representative words returned per topic
+
+    ## Returns
+        A dictionary mapping section numbers to their main topic words
+    """
+    text = get_book_content(book_id)
     logger.info("Book fetched for id: %s", book_id)
 
     chapters = split_book(text)
@@ -129,17 +196,52 @@ def extract_topics_from_book(book_id, book_content, n_topics=N_Topics, n_words=N
         results[i + 1] = lda_topics[topic_index]
     return results
 
-def topic_modeling(book_id: int, book_content: str | None = None) -> str:
-    topics = extract_topics_from_book(
-        book_id=book_id,
-        book_content=book_content or get_book_content(book_id),
+
+def _build_parser():
+    """
+    Create the command line argument parser.
+
+    The parser allows the user to specify the Project Gutenberg
+    book identifier when running the script.
+
+    ## Parameters
+        None
+
+    ## Returns
+        An argparse.ArgumentParser instance
+    """
+    parser = argparse.ArgumentParser(
+        description="Extract main topics from each section of a Project Gutenberg book.",
     )
+    parser.add_argument(
+        "--topics",
+        type=int,
+        required=True,
+        help="Numeric book ID from Project Gutenberg.",
+    )+
 
-    result = ''
 
+def main():
+    """
+    Entry point of the program.
+
+    It parses command line arguments, extracts topics from the
+    selected book, and prints the detected topics for each section.
+
+    ## Parameters
+        None
+
+    ## Returns
+        None
+    """
+    parser = _build_parser()
+    args = parser.parse_args()
+    topics = extract_topics_from_book(
+        book_id=args.topics,
+    )
     for section_num, words in topics.items():
-        result += f'\n=== Section {section_num} ===\n'
-        result += ', '.join(words)
-        result += '\n'
+        print(f"\n=== Section {section_num} ===")
+        print(", ".join(words))
 
-    return result
+if __name__ == "__main__":
+    main()

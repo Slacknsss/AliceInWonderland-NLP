@@ -1,11 +1,11 @@
-from .components.get_book_content import get_book_content
-from .components.get_info import get_info
-from .lexical_diversity import lexical_diversity
-from .topic_modeling import topic_modeling
-from .named_entities_recognition import named_entities
 from .book_summarization import summarize_book
 from .books_similarity import get_books_similarity
+from .components.get_book_content import get_book_content
+from .components.get_info import get_info
 from .components.wordcloud import create_wordcloud
+from .lexical_diversity import lexical_diversity
+from .named_entities_recognition import named_entities
+from .topic_modeling import topic_modeling
 
 
 def make_book_card(book_id: int) -> dict[str, dict | list | str]:

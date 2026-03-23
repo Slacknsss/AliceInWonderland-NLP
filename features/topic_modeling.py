@@ -1,11 +1,13 @@
 import re
 import argparse
 import logging
+
 import nltk
 from nltk.corpus import stopwords
-from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.decomposition import LatentDirichletAllocation
-from components.get_book_content import get_book_content
+from sklearn.feature_extraction.text import CountVectorizer
+
+from .components.get_book_content import get_book_content
 
 Word_Per_Chunk = 1000
 N_Topics = 8
@@ -218,7 +220,7 @@ def _build_parser():
         type=int,
         required=True,
         help="Numeric book ID from Project Gutenberg.",
-    )+
+    )
 
 
 def main():

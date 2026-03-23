@@ -1,5 +1,3 @@
-import argparse
-import logging
 import re
 
 import nltk
@@ -27,14 +25,8 @@ LITERARY_STOPWORDS = {
     'here', 'too', 'very', 'just', 'about', 'over', 'under', 'again', 'once',
 }
 
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(levelname)s | %(message)s',
-)
-logger = logging.getLogger(__name__)
 
-
-def _build_stopwords():
+def build_stopwords():
     """
     Build the list of stopwords used by the vectorizer.
 
@@ -51,7 +43,7 @@ def _build_stopwords():
     return list(base | LITERARY_STOPWORDS)
 
 
-def split_into_chunks(text, words_per_chunk=Word_Per_Chunk):
+def split_into_chunks(text: str, words_per_chunk: int = Word_Per_Chunk):
     """
     Split a text into fixed-size chunks based on a number of words.
 
@@ -65,15 +57,18 @@ def split_into_chunks(text, words_per_chunk=Word_Per_Chunk):
     ## Returns
         A list of text chunks
     """
+
     tokens = text.split()
     chunks = []
+
     for i in range(0, len(tokens), words_per_chunk):
         chunk = ' '.join(tokens[i : i + words_per_chunk])
         chunks.append(chunk)
+
     return chunks
 
 
-def split_book(text):
+def split_book(text: str):
     """
     Split a book into chapters based on chapter markers.
 
@@ -99,10 +94,6 @@ def split_book(text):
             boundaries.append(pos)
 
     if len(boundaries) <= 1:
-        logger.warning(
-            'No chapter markers found — falling back to %d-word chunks.',
-            Word_Per_Chunk,
-        )
         return split_into_chunks(text)
 
     chapters = []
@@ -112,11 +103,10 @@ def split_book(text):
         if chapter_text:
             chapters.append(chapter_text)
 
-    logger.info('Book split into %d segment(s).', len(chapters))
     return chapters
 
 
-def get_top_words(model, feature_names, n_words):
+def get_top_words(model, feature_names: list, n_words: int):
     """
     Extract the most important words for each topic in the LDA model.
 
@@ -131,17 +121,21 @@ def get_top_words(model, feature_names, n_words):
     ## Returns
         A list of topics containing their most important words
     """
+
     topics = []
     for topic in model.components_:
         top_indices = topic.argsort()[-n_words:][::-1]
         words = []
+
         for i in top_indices:
             words.append(feature_names[i])
+
         topics.append(words)
+
     return topics
 
 
-def extract_topics_from_book(book_id, n_topics=N_Topics, n_words=N_Words):
+def extract_topics_from_book(book_id: int, book_content: str | None = None, n_topics: int = N_Topics, n_words: int = N_Words):
     """
     Extract the main topic for each section of a book.
 
@@ -157,13 +151,12 @@ def extract_topics_from_book(book_id, n_topics=N_Topics, n_words=N_Words):
     ## Returns
         A dictionary mapping section numbers to their main topic words
     """
-    text = get_book_content(book_id)
-    logger.info('Book fetched for id: %s', book_id)
+    text = book_content or get_book_content(book_id)
 
     chapters = split_book(text)
 
     vectorizer = CountVectorizer(
-        stop_words=_build_stopwords(),
+        stop_words=build_stopwords(),
         max_df=0.85,
         min_df=1,
         ngram_range=(1, 2),
@@ -172,13 +165,6 @@ def extract_topics_from_book(book_id, n_topics=N_Topics, n_words=N_Words):
     document_term_matrix = vectorizer.fit_transform(chapters)
 
     actual_n_topics = min(n_topics, len(chapters))
-    if actual_n_topics < n_topics:
-        logger.warning(
-            'Requested %d topics but only %d sections available — using %d topic(s) instead.',
-            n_topics,
-            len(chapters),
-            actual_n_topics,
-        )
 
     lda = LatentDirichletAllocation(
         n_components=actual_n_topics,
@@ -193,38 +179,16 @@ def extract_topics_from_book(book_id, n_topics=N_Topics, n_words=N_Words):
     lda_topics = get_top_words(lda, feature_names, n_words)
 
     section_topic_matrix = lda.transform(document_term_matrix)
+
     results = {}
     for i in range(len(chapters)):
         topic_index = section_topic_matrix[i].argmax()
         results[i + 1] = lda_topics[topic_index]
+
     return results
 
 
-def _build_parser():
-    """
-    Create the command line argument parser.
-
-    The parser allows the user to specify the Project Gutenberg
-    book identifier when running the script.
-
-    ## Parameters
-        None
-
-    ## Returns
-        An argparse.ArgumentParser instance
-    """
-    parser = argparse.ArgumentParser(
-        description='Extract main topics from each section of a Project Gutenberg book.',
-    )
-    parser.add_argument(
-        '--topics',
-        type=int,
-        required=True,
-        help='Numeric book ID from Project Gutenberg.',
-    )
-
-
-def main():
+def topic_modeling(book_id: int, book_content: str | None = None):
     """
     Entry point of the program.
 
@@ -232,20 +196,20 @@ def main():
     selected book, and prints the detected topics for each section.
 
     ## Parameters
-        None
+        **book_id**: Gutenberg project unique identifier
+        **book_content**: Book content
 
     ## Returns
-        None
+        Main topics as string
     """
-    parser = _build_parser()
-    args = parser.parse_args()
+
     topics = extract_topics_from_book(
-        book_id=args.topics,
+        book_id=book_id,
+        book_content=book_content
     )
+
+    result = ''
     for section_num, words in topics.items():
-        print(f'\n=== Section {section_num} ===')
-        print(', '.join(words))
+        result += (f'\n=== Section {section_num} ===\n' + ', '.join(words) + '\n')
 
-
-if __name__ == '__main__':
-    main()
+    return result

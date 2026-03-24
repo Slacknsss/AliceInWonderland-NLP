@@ -167,3 +167,22 @@ def find_similar_books(book_id: int, n_similar: int = N_SIMILAR):
         similar_titles.append(BOOK_COLLECTION[similar_book_id])
 
     return similar_titles
+
+
+def similar_books(book_id: int):
+    """
+    Entry point for the --similar option.
+
+    It calls find_similar_books and formats the result as a printable
+    list of titles sorted by decreasing similarity.
+
+    ## Parameters
+        **book_id**: Project Gutenberg identifier of the target book
+
+    ## Returns
+        Similar book titles as a formatted string
+    """
+    titles = find_similar_books(book_id=book_id)
+
+    result = str(titles)
+    return result

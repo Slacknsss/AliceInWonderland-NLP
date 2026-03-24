@@ -9,6 +9,7 @@ from features.download_all_books import download_all_books
 from features.lexical_diversity import lexical_diversity
 from features.named_entities_recognition import named_entities
 from features.topic_modeling import topic_modeling
+from features.similar_book import similar_books
 
 args_action = {
     'lexdiv': {
@@ -41,6 +42,10 @@ args_action = {
     },
     'cover': {
         'action': lambda book_id: fetch_cover(book_id, True),
+        'sub_args': ['book_id']
+    },
+    'similar': {
+        'action': lambda book_id: similar_books(book_id),
         'sub_args': ['book_id']
     },
     'download': {

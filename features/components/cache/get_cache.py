@@ -2,9 +2,10 @@ import json
 
 import pandas as pd
 
+
 def get_cache(
-    book_id: int, 
-    feature_name: str, 
+    book_id: int,
+    feature_name: str,
     csv_path: str = 'alice_assets/cache/alice_cache.csv'
 ) -> str | dict | None:
     """
@@ -14,7 +15,7 @@ def get_cache(
         **book_id**: Gutenberg project unique identifier
         **feature_name**: Feature name
         **csv_path**: CSV file path
-    
+
     ## Returns
         Feature data
     """
@@ -27,7 +28,7 @@ def get_cache(
         raise TypeError('csv_path must be str')
     if book_id < 0:
         raise ValueError('book_id must be positive')
-    
+
     try:
         df_cache = pd.read_csv(csv_path)
     except pd.errors.EmptyDataError:

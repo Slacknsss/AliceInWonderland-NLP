@@ -3,6 +3,7 @@ from pathlib import Path
 
 import pandas as pd
 
+
 def set_cache(
     book_id: int,
     feature_name: str,
@@ -16,7 +17,7 @@ def set_cache(
         **book_id**: Gutenberg project unique identifier
         **feature_name**: Feature name
         **csv_path**: CSV file path
-    
+
     ## Returns
         Feature data
     """
@@ -31,7 +32,7 @@ def set_cache(
         raise TypeError('csv_path must be str')
     if book_id < 0:
         raise ValueError('book_id must be positive')
-    
+
     csv_file = Path(csv_path)
     if not csv_file.exists():
         csv_file.parent.mkdir(parents=True, exist_ok=True)

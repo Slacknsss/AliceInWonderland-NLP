@@ -4,6 +4,7 @@ from fpdf import FPDF
 
 from .fetch_cover import fetch_cover
 
+
 def make_pdf_card(book_card_data: dict) -> str:
     """
     Create pdf file for book card
@@ -51,7 +52,7 @@ def make_pdf_card(book_card_data: dict) -> str:
         pdf.set_font('Helvetica', style='B', size=12)
         pdf.cell(0, 8, to_latin1(title), ln=1)
         pdf.set_font('Helvetica', size=11)
-
+        print(title, type(content))
         if isinstance(content, dict):
             for key, value in content.items():
                 pdf.set_x(pdf.l_margin)

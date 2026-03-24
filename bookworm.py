@@ -13,35 +13,43 @@ from features.topic_modeling import topic_modeling
 args_action = {
     'lexdiv': {
         'action': lambda book_id: lexical_diversity(book_id),
-        'sub_args': ['book_id']
+        'sub_args': ['book_id'],
+        'use_cache': True,
     },
     'topics': {
         'action': lambda book_id: topic_modeling(book_id),
-        'sub_args': ['book_id']
+        'sub_args': ['book_id'],
+        'use_cache': True,
     },
     'info': {
         'action': lambda book_id: get_info(book_id),
-        'sub_args': ['book_id']
+        'sub_args': ['book_id'],
+        'use_cache': True,
     },
     'entities': {
         'action': lambda book_id: named_entities(book_id),
-        'sub_args': ['book_id']
+        'sub_args': ['book_id'],
+        'use_cache': True,
     },
     'summarize': {
         'action': lambda book_id: summarize_book(book_id),
-        'sub_args': ['book_id']
+        'sub_args': ['book_id'],
+        'use_cache': True,
     },
     'similar': {
         'action': lambda book_id: get_books_similarity(book_id),
-        'sub_args': ['book_id']
+        'sub_args': ['book_id'],
+        'use_cache': True,
     },
     'card': {
         'action': lambda book_id: make_book_card(book_id),
-        'sub_args': ['book_id']
+        'sub_args': ['book_id'],
+        'use_cache': True,
     },
     'cover': {
         'action': lambda book_id: fetch_cover(book_id, True),
-        'sub_args': ['book_id']
+        'sub_args': ['book_id'],
+        'use_cache': True,
     },
     'download': {
         'action': lambda author, category: (

@@ -6,6 +6,7 @@ from .components.wordcloud import create_wordcloud
 from .lexical_diversity import lexical_diversity
 from .named_entities_recognition import named_entities
 from .topic_modeling import topic_modeling
+from .components.make_pdf_card import make_pdf_card
 
 
 def make_book_card(book_id: int) -> dict[str, dict | list | str]:
@@ -39,5 +40,7 @@ def make_book_card(book_id: int) -> dict[str, dict | list | str]:
         book_id,
         book_content,
     )
+
+    make_pdf_card(book_card)
 
     return book_card

@@ -1,14 +1,8 @@
-import argparse
-
 import nltk
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-
-try:
-    from .components.get_book_content import get_book_content
-except ImportError:
-    from components.get_book_content import get_book_content
+from components.get_book_content import get_book_content
 
 N_SIMILAR = 5
 

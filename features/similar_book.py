@@ -118,3 +118,52 @@ def vectorize_books(texts: list):
 
     return tfidf_matrix, vectorizer
 
+def find_similar_books(book_id: int, n_similar: int = N_SIMILAR):
+    """
+    Return a list of books most similar to the given book.
+
+    The collection is used as training: the vectorizer
+    and TF-IDF transformer are fitted on those 20 books so
+    that the vocabulary and IDF weights are stable and consistent.
+
+    If the requested book_id belongs to the collection it is projected
+    using the computed matrix row. If it is an external book, the
+    text is downloaded separately and placed into the same vector space
+    using transform(), so that it is comparable to the collection vectors.
+
+    ## Parameters
+        **book_id**: Project Gutenberg identifier of the target book
+        **n_similar**: number of similar books to return
+
+    ## Returns
+        A list of book titles from the collection sorted by decreasing
+        similarity to the target book
+    """
+    collection_ids = list(BOOK_COLLECTION.keys())
+    loaded_ids, texts = load_all_books(collection_ids)
+
+    tfidf_matrix, vectorizer = vectorize_books(texts)
+
+    if book_id in loaded_ids:
+        target_index = loaded_ids.index(book_id)
+        target_vector = tfidf_matrix[target_index]
+    else:
+        target_text = get_book_content(book_id)
+        target_vector = vectorizer.transform([target_text])
+
+    scores = cosine_similarity(target_vector, tfidf_matrix).flatten()
+
+    ranked = []
+    for idx, score in enumerate(scores):
+        if book_id in loaded_ids and idx == loaded_ids.index(book_id):
+            continue
+        ranked.append((idx, score))
+
+    ranked.sort(key=lambda pair: pair[1], reverse=True)
+
+    similar_titles = []
+    for idx, _score in ranked[:n_similar]:
+        similar_book_id = loaded_ids[idx]
+        similar_titles.append(BOOK_COLLECTION[similar_book_id])
+
+    return similar_titles

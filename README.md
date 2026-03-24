@@ -11,6 +11,13 @@ This code is published for demonstration purposes only.
 
 ## ⚙️ Tech Stack
 
+(ML models)
+- scikit-learn
+
+(NLP analyses)
+- NLTK
+- spicy
+
 (csv data analyse)
 - pandas
 
@@ -21,7 +28,7 @@ This code is published for demonstration purposes only.
 - Streamlit
 
 (unitaires tests)
-- unittest
+- unittest (unittest.mock to mock function returns)
 
 ## 📬 Contact
 
@@ -101,4 +108,9 @@ python3 bookworm.py --entities <book_id>
 ### 4. Run dashboard : 
 ```bash
 streamlit dashboard.py run
+```
+
+### 5. Run unit tests :
+```bash
+bash start_unittests.sh
 ```

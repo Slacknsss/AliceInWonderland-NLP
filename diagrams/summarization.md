@@ -1,65 +1,89 @@
-# Alice in Wonderland
-
 ## Summarization
 
-### 1 - Get book content
-![image](/alice_assets/md/summarization/summarization_1.png)
+This feature extracts a concise summary by scoring sentences and selecting the most relevant ones.
+---
 
-### 2 - Clean book content
-![image](/alice_assets/md/summarization/summarization_2.png)
+### Line-by-line Reasoning
 
-#### 2.1 - Normalize all line break
-![image](/alice_assets/md/summarization/summarization_3.png)
+#### 1. Input validation
 
-#### 2.2 - Normalize skip line (1 max)
-![image](/alice_assets/md/summarization/summarization_4.png)
+```python
+if book_content is not None and not isinstance(book_content, str):
+	raise TypeError('book_content must be a str or None')
+if not isinstance(book_id, int):
+	raise TypeError('book_id must be an int')
+if book_content is not None and not book_content.strip():
+	raise ValueError('book_content must not be empty')
+if book_id < 0:
+	raise ValueError('book_id must be positive')
+```
+Validation prevents empty or invalid input and ensures consistent behavior.
 
-#### 2.3 - Return cleaned book
-![image](/alice_assets/md/summarization/summarization_5.png)
+#### 2. Retrieve content if missing
 
-### 3 - Text segmentation
+```python
+if book_content is None:
+	book_content = get_book_content(book_id)
+```
+The content is fetched by ID only when needed.
 
-#### 3.1 - Normalize spaces
-![image](/alice_assets/md/summarization/summarization_6.png)
+#### 3. Clean the book content
 
-#### 3.2 - Split text into sentences
-![image](/alice_assets/md/summarization/summarization_7.png)
+```python
+cleaned_content = clean_book_content(book_content)
+```
+Cleaning normalizes line breaks and removes extra blank lines to simplify segmentation.
 
-#### 3.3 - Return list of sentences
-![image](/alice_assets/md/summarization/summarization_8.png)
+#### 4. Segment into sentences
 
-### 4 - Score sentences
-![image](/alice_assets/md/summarization/summarization_9.png)
+```python
+sentences = segmentation(cleaned_content)
+```
+The text is split into sentences and normalized for scoring.
 
-#### 4.1 - Get words frequency
-![image](/alice_assets/md/summarization/summarization_10.png)
+#### 5. Score sentences
 
-#### 4.2 - Score sentences by usefull words rate
-![image](/alice_assets/md/summarization/summarization_11.png)
+```python
+scored_sentences = score_sentences(
+	sentences,
+	min_words=min_words,
+	max_words=max_words,
+	min_useful_words=min_useful_words,
+	min_word_length=min_word_length,
+	exclude_dialogue=exclude_dialogue,
+	normalize_by_length=normalize_by_length,
+	skip_first_sentences=skip_first_sentences,
+)
+```
+Each sentence receives a score based on useful word frequency and filters (length, dialogue, etc.).
 
-#### 4.3 - Return list of scored sentences (sentence, score)
-![image](/alice_assets/md/summarization/summarization_12.png)
+#### 6. Build the final summary
 
-### 5 - Build summary
-![image](/alice_assets/md/summarization/summarization_13.png)
+```python
+summary = build_summary(
+	scored_sentences,
+	max_sentences=max_sentences,
+	min_score=min_score,
+)
+```
+The highest-scoring sentences are selected, de-duplicated, and re-ordered to keep narrative flow.
 
-#### 5.1 - Index sentences
-![image](/alice_assets/md/summarization/summarization_14.png)
+#### 7. Return summary
 
-#### 5.2 - Sort sentences by score
-![image](/alice_assets/md/summarization/summarization_15.png)
+```python
+return summary
+```
+The output is a single string containing the summarized sentences.
+---
 
-#### 5.3 - Remove possible duplicates and keep only n sentences
-![image](/alice_assets/md/summarization/summarization_16.png)
+### Pipeline
 
-#### 5.4 - Sort sentences by index
-![image](/alice_assets/md/summarization/summarization_17.png)
+```
+Raw text -> Clean -> Segment -> Score -> Select -> Summary
+```
 
-#### 5.5 - Remove empty sentences
-![image](/alice_assets/md/summarization/summarization_18.png)
+### Returns
 
-#### 5.6 - Return cleaned n sentences
-![image](/alice_assets/md/summarization/summarization_19.png)
-
-### 6 - Return summary
-![image](/alice_assets/md/summarization/summarization_20.png)
+```python
+"Alice was beginning to get very tired of sitting by her sister on the bank..."
+```

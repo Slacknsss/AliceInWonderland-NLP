@@ -1,9 +1,5 @@
 import re
 
-from nltk.corpus import stopwords
-
-stop_words = set(stopwords.words('english'))
-
 
 def tokenize(text: str) -> list[(str, str)]:
     """
@@ -12,7 +8,6 @@ def tokenize(text: str) -> list[(str, str)]:
     ## Parameters
         **text**: The text that will be tokenized
         **remove_punct**: Toggle suppression of punctuation in the tokens
-        **remove_stop_words**: Toggle suppression of stop words (english stop words)
 
     ## Returns
         The list of the generated tokens

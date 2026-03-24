@@ -2,7 +2,8 @@ import nltk
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-from components.get_book_content import get_book_content
+
+from .components.get_book_content import get_book_content
 
 N_SIMILAR = 5
 
@@ -91,14 +92,14 @@ def vectorize_books(texts: list):
     TfidfVectorizer combines CountVectorizer and TfidfTransformer into a
     single step.
 
-    The fitted vectorizer is returned so that any new text can later be projected 
+    The fitted vectorizer is returned so that any new text can later be projected
     into the same vector space using transform() instead of fit_transform().
 
     ## Parameters
         **texts**: list of raw book contents
 
     ## Returns
-        A tuple (tfidf_matrix, vectorizer) where tfidf_matrix is a 
+        A tuple (tfidf_matrix, vectorizer) where tfidf_matrix is a
         matrix of shape (n_books, n_features) and vectorizer is the fitted TfidfVectorizer
     """
     vectorizer = TfidfVectorizer(
@@ -112,7 +113,7 @@ def vectorize_books(texts: list):
 
     return tfidf_matrix, vectorizer
 
-def find_similar_books(book_id: int, n_similar: int = N_SIMILAR):
+def find_similar_books(book_id: int, book_content: str | None = None, n_similar: int = N_SIMILAR):
     """
     Return a list of books most similar to the given book.
 
@@ -142,7 +143,7 @@ def find_similar_books(book_id: int, n_similar: int = N_SIMILAR):
         target_index = loaded_ids.index(book_id)
         target_vector = tfidf_matrix[target_index]
     else:
-        target_text = get_book_content(book_id)
+        target_text = book_content or get_book_content(book_id)
         target_vector = vectorizer.transform([target_text])
 
     scores = cosine_similarity(target_vector, tfidf_matrix).flatten()
@@ -163,7 +164,7 @@ def find_similar_books(book_id: int, n_similar: int = N_SIMILAR):
     return similar_titles
 
 
-def similar_books(book_id: int):
+def similar_books(book_id: int, book_content: str | None = None):
     """
     Entry point for the --similar option.
 
@@ -172,11 +173,11 @@ def similar_books(book_id: int):
 
     ## Parameters
         **book_id**: Project Gutenberg identifier of the target book
+        **book_content**: Book content
 
     ## Returns
         Similar book titles as a formatted string
     """
-    titles = find_similar_books(book_id=book_id)
+    titles = find_similar_books(book_id=book_id, book_content=book_content)
 
-    result = str(titles)
-    return result
+    return titles

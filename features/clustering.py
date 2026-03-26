@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from .components.get_info import get_info
+
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
@@ -46,12 +48,24 @@ def clustering(
     if not book_files:
         raise ValueError('no .txt books found')
 
+    def resolve_title(book_file: Path) -> str:
+        stem = book_file.stem
+        digits = ''.join(ch for ch in stem if ch.isdigit())
+        if not digits:
+            return book_file.name
+        try:
+            info = get_info(int(digits))
+            title = info.get('title') if isinstance(info, dict) else None
+            return title or book_file.name
+        except Exception:
+            return book_file.name
+
     texts = []
     titles = []
     for book_file in book_files:
         with open(book_file, encoding='utf-8', errors='ignore') as file:
             texts.append(file.read())
-            titles.append(book_file.name)
+            titles.append(resolve_title(book_file))
 
     vectorizer = TfidfVectorizer(max_features=max_features, stop_words='english')
     X = vectorizer.fit_transform(texts)

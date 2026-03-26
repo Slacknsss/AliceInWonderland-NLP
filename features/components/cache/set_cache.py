@@ -26,8 +26,8 @@ def set_cache(
         raise TypeError('book_id must be an int')
     if not isinstance(feature_name, str):
         raise TypeError('feature_name must be str')
-    if not isinstance(feature_value, (str, dict)):
-        raise TypeError('feature_value must be str or dict')
+    if not isinstance(feature_value, (str, list, dict)):
+        raise TypeError('feature_value must be str, list or dict')
     if not isinstance(csv_path, str):
         raise TypeError('csv_path must be str')
     if book_id < 0:
@@ -57,6 +57,9 @@ def set_cache(
 
     if columns_changed:
         df_cache.to_csv(csv_file, index=False)
+
+    if isinstance(feature_value, list):
+        feature_value = str(feature_value)
 
     value_to_store = (
         json.dumps(feature_value, ensure_ascii=True, separators=(',', ':'))

@@ -9,12 +9,16 @@ from features.lexical_diversity import lexical_diversity
 from features.named_entities_recognition import named_entities
 from features.similar_book import similar_books
 from features.topic_modeling import topic_modeling
+from features.clustering import clustering
 
 args_action = {
     'lexdiv': {
         'action': lambda book_id: lexical_diversity(book_id),
         'sub_args': ['book_id'],
         'use_cache': True,
+    },
+    'clustering': {
+        'action': lambda: clustering(),
     },
     'topics': {
         'action': lambda book_id: topic_modeling(book_id),

@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 
 import pandas as pd
 
@@ -29,8 +30,15 @@ def get_cache(
     if book_id < 0:
         raise ValueError('book_id must be positive')
 
+    csv_file = Path(csv_path)
+    if not csv_file.exists():
+        csv_file.parent.mkdir(parents=True, exist_ok=True)
+        df_cache = pd.DataFrame(columns=['id', feature_name])
+        df_cache.to_csv(csv_file, index=False)
+        return None
+
     try:
-        df_cache = pd.read_csv(csv_path)
+        df_cache = pd.read_csv(csv_file)
     except pd.errors.EmptyDataError:
         return None
 

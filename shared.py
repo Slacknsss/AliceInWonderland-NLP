@@ -21,7 +21,7 @@ CSS = """
 <style>
   @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,wght@0,300;0,600;1,300&display=swap');
 
-  html, body, [class*="css"] { font-family: 'DM Mono', monospace; }
+  html, body, { font-family: 'DM Mono', monospace; }
 
   .stApp { background-color: #0e0f0f; }
 
@@ -112,6 +112,9 @@ CSS = """
     font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.14em;
     color: #b5a07a; font-family: 'DM Mono', monospace; margin-bottom: 0.3rem;
   }
+
+    [data-testid="stSidebarCollapseButton"] { display: none !important; } 
+
 </style>
 """
 

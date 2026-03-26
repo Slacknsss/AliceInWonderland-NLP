@@ -24,6 +24,10 @@ def argument_validation(
         parser.error('You must specify exactly one command.')
 
     command = selected_commands[0]
+
+    if not args_action[command].get('sub_args', []):
+        return
+
     command_sub_args = args_action[command]['sub_args']
 
     if 'book_id' in command_sub_args:

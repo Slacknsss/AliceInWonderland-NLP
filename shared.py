@@ -1,4 +1,5 @@
 import streamlit as st
+
 from features.book_card import make_book_card
 from features.book_summarization import summarize_book
 from features.components.fetch_cover import fetch_cover
@@ -115,7 +116,7 @@ CSS = """
 """
 
 
-# Helpers 
+# Helpers
 
 def setup_page(title: str, icon: str) -> None:
     """

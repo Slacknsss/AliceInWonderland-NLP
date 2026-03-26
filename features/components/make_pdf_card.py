@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from fpdf import FPDF
+from fpdf import FPDF, XPos, YPos
 
 from .fetch_cover import fetch_cover
 
@@ -35,7 +35,7 @@ def make_pdf_card(book_card_data: dict) -> str:
         cover_path = Path(f'alice_assets/covers/cover_{book_id}.png')
         if cover_path.exists():
             pdf.image(str(cover_path), x=12, y=10, w=60)
-            pdf.set_y(90)
+            pdf.set_y(95)
             pdf.set_x(pdf.l_margin)
     except Exception:
         pdf.ln(10)
@@ -50,9 +50,9 @@ def make_pdf_card(book_card_data: dict) -> str:
     def write_section(title: str, content: object) -> None:
         pdf.set_x(pdf.l_margin)
         pdf.set_font('Helvetica', style='B', size=12)
-        pdf.cell(0, 8, to_latin1(title), ln=1)
+        pdf.cell(0, 8, to_latin1(title), new_x=XPos.LMARGIN, new_y=YPos.NEXT)
         pdf.set_font('Helvetica', size=11)
-        print(title, type(content))
+
         if isinstance(content, dict):
             for key, value in content.items():
                 pdf.set_x(pdf.l_margin)

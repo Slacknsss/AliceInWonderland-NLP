@@ -5,7 +5,7 @@ from .components.get_book_content import get_book_content
 from .components.tokenize import tokenize
 
 
-def lexical_diversity(book_id: int, book_content: str) -> dict[str, int | float]:
+def lexical_diversity(book_id: int, book_content: str | None = None) -> dict[str, int | float]:
     """
     Get lexical informations about a book based on tokenization
 

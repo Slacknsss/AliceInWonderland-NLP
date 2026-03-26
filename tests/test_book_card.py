@@ -16,7 +16,7 @@ class TestBookCard(unittest.TestCase):
             mock.patch(
                 'features.book_card.get_book_content', return_value='content'
             ) as get_content,
-            mock.patch('features.book_card.get_info', return_value={'title': 'Alice'}),
+            mock.patch('features.book_card.get_info', return_value={'id': 11, 'title': 'Alice'}),
             mock.patch('features.book_card.lexical_diversity', return_value={'tok': 1}),
             mock.patch('features.book_card.topic_modeling', return_value='topics'),
             mock.patch(
@@ -24,14 +24,14 @@ class TestBookCard(unittest.TestCase):
                 return_value={'characters': [], 'locations': []},
             ),
             mock.patch('features.book_card.summarize_book', return_value='summary'),
-            mock.patch('features.book_card.get_books_similarity', return_value=['id2']),
+            mock.patch('features.book_card.similar_books', return_value=['id2']),
             mock.patch('features.book_card.create_wordcloud') as create_wordcloud,
         ):
             result = make_book_card(12)
 
         get_content.assert_called_once_with(12)
         create_wordcloud.assert_called_once_with(12, 'content')
-        self.assertEqual(result['info'], {'title': 'Alice'})
+        self.assertEqual(result['info'], {'id': 11, 'title': 'Alice'})
         self.assertEqual(result['lexdiv'], {'tok': 1})
         self.assertEqual(result['topics'], 'topics')
         self.assertEqual(result['entities'], {'characters': [], 'locations': []})

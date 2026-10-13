@@ -5,6 +5,10 @@ to help publishers and editors quickly make sense of Wonderland's endless librar
 The challenge is to develop a prototype NLP engine performing operations on books from Project
 Gutenberg through dedicated CLI commands.
 
+Epitech Paris, B-AIA-200, team of three: Théo Busiris, Jules Fischer, Simon Slack.
+
+**My part (Simon):** the named entities feature (characters and places, `--entities`) and its diagram in `diagrams/named_entities.md`, a first draft of the clustering that Théo then rewrote, and my bootstrap in `alice_bootstrap/bootstrap_Simon`. Most of the engine, the dashboard and the tests are from Théo and Jules.
+
 ## 🧾 License
 This code is published for demonstration purposes only.  
 © 2026 — **All rights reserved.**
@@ -16,7 +20,7 @@ This code is published for demonstration purposes only.
 
 (NLP analyses)
 - NLTK
-- spicy
+- spaCy
 
 (csv data analyse)
 - pandas
@@ -39,7 +43,6 @@ Théo Busiris :
 
 Jules Fischer : 
 - Email pro : [jules.fischer@epitech.eu](jules.fischer@epitech.eu)
-- LinkedIn : [linkedin.com/in/](https://linkedin.com/in/simon-slack)
 - Github : [github.com/Jules-Epitech](https://github.com/Jules-Epitech)
 
 Simon SLACK : 
@@ -51,8 +54,8 @@ Simon SLACK :
 
 ### 1. Clone the repo and go into the folder : 
 ```bash
-git clone METTRE L'URL
-cd B-DAT-200-PAR-2-1-tardis-4.git
+git clone https://github.com/Slacknsss/AliceInWonderland-NLP.git
+cd AliceInWonderland-NLP
 ```
 
 ### 2. Set up venv with python :
@@ -87,7 +90,7 @@ python3 bookworm.py --download --author <author_name>
 
 By category :
 ```bash
-python3 bookworm.py --card --category <category_name>
+python3 bookworm.py --download --category <category_name>
 ```
 
 Show book lexical diversity
@@ -107,7 +110,7 @@ python3 bookworm.py --entities <book_id>
 
 ### 4. Run dashboard : 
 ```bash
-streamlit dashboard.py run
+streamlit run dashboard.py
 ```
 
 ### 5. Run unit tests :
